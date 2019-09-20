@@ -23,12 +23,12 @@ public class GroceryRepositoryTest {
     }
 
     @Test(expected = NullPointerException.class)
-    public void queryGroceries_withNullSearchObject_throwsException() {
+    public void searchGroceries_withNullSearchObject_throwsException() {
         repository.searchGroceries(null);
     }
 
     @Test
-    public void queryGroceries_withNoParams_returnsAllItems() {
+    public void searchGroceries_withNoParams_returnsAllItems() {
 
         SearchGroceries query = SearchGroceries
                 .builder()
@@ -40,7 +40,7 @@ public class GroceryRepositoryTest {
     }
 
     @Test
-    public void queryGroceries_withPartialName_returnsMatchingItems() {
+    public void searchGroceries_withPartialName_returnsMatchingItems() {
         Grocery g = new Grocery("hello world!", "french");
         repository.putGrocery(g);
 
@@ -56,7 +56,7 @@ public class GroceryRepositoryTest {
     }
 
     @Test
-    public void queryGroceries_withCategory_returnsMatchingItems() {
+    public void searchGroceries_withCategory_returnsMatchingItems() {
         Grocery g = new Grocery("hello world!", "french");
         repository.putGrocery(g);
 
@@ -72,7 +72,7 @@ public class GroceryRepositoryTest {
     }
 
     @Test
-    public void queryGroceries_withTags_returnsMatchingItems() {
+    public void searchGroceries_withTags_returnsMatchingItems() {
         Grocery g = new Grocery("hello world!", "french", Collections.singletonList("tag"));
         repository.putGrocery(g);
 
@@ -88,7 +88,7 @@ public class GroceryRepositoryTest {
     }
 
     @Test
-    public void queryGroceries_withPartialNameAndCategoryAndTags_returnsMatchingItems() {
+    public void searchGroceries_withPartialNameAndCategoryAndTags_returnsMatchingItems() {
         Grocery g = new Grocery("hello world!", "french", Collections.singletonList("tag"));
         repository.putGrocery(g);
 
@@ -106,7 +106,7 @@ public class GroceryRepositoryTest {
     }
 
     @Test
-    public void queryGroceries_withPartialNameAndCategoryAndTagsButNoMatchingItemInStore_returnsNoItems() {
+    public void searchGroceries_withPartialNameAndCategoryAndTagsButNoMatchingItemInStore_returnsNoItems() {
         Grocery g = new Grocery("hello world!", "french", Collections.singletonList("tag"));
         repository.putGrocery(g);
 
@@ -155,22 +155,22 @@ public class GroceryRepositoryTest {
     }
 
     @Test
-    public void removeGrocery_withExistingId_removesItemAndReturnsRemoved() {
+    public void deleteGrocery_withExistingId_removesItemAndReturnsRemoved() {
         Grocery expected = new Grocery("hello world!", "french", Collections.singletonList("tag"));
         String id = repository.putGrocery(expected);
 
-        Optional<Grocery> actual = repository.removeGrocery(id);
+        Optional<Grocery> actual = repository.deleteGrocery(id);
 
         Assert.assertTrue(actual.isPresent());
         Assert.assertEquals(expected, actual.get());
     }
 
     @Test
-    public void removeGrocery_withNonExistingId_returnsEmpty() {
+    public void deleteGrocery_withNonExistingId_returnsEmpty() {
         Grocery expected = new Grocery("hello world!", "french", Collections.singletonList("tag"));
         String id = repository.putGrocery(expected);
 
-        Optional<Grocery> actual = repository.removeGrocery(id.substring(id.length() / 2));
+        Optional<Grocery> actual = repository.deleteGrocery(id.substring(id.length() / 2));
 
         Assert.assertTrue(actual.isEmpty());
     }

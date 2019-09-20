@@ -33,11 +33,28 @@ public class GroceryRepository {
     }
 
     public Optional<Grocery> getGrocery(String id) {
+        Preconditions.checkNotNull(id);
+
         return Optional.ofNullable(store.get(id));
     }
 
     public String putGrocery(Grocery grocery) {
+        Preconditions.checkNotNull(grocery);
+
         return this.putGrocery(UUID.randomUUID().toString(), grocery);
+    }
+
+    public Optional<Grocery> updateGrocery(String id, Grocery grocery) {
+        Preconditions.checkNotNull(id);
+        Preconditions.checkNotNull(grocery);
+
+        if (getGrocery(id).isPresent()) {
+            putGrocery(id, grocery);
+
+            return Optional.of(grocery);
+        } else {
+            return Optional.empty();
+        }
     }
 
     private String putGrocery(String id, Grocery grocery) {
@@ -46,7 +63,9 @@ public class GroceryRepository {
         return id;
     }
 
-    public Optional<Grocery> removeGrocery(String id) {
+    public Optional<Grocery> deleteGrocery(String id) {
+        Preconditions.checkNotNull(id);
+
         return Optional.ofNullable(store.remove(id));
     }
 

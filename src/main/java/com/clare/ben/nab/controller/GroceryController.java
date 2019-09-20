@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Collection;
 
 @RestController
-@RequestMapping("/grocery")
-public class GroceryController extends AbstractApiController {
+@RequestMapping("/api/grocery")
+public class GroceryController {
 
     private final GroceryService service;
 
@@ -38,7 +38,7 @@ public class GroceryController extends AbstractApiController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Void> editGrocery(@PathVariable String id, @RequestBody Grocery req) {
         return ResponseEntity.noContent().build();
     }
