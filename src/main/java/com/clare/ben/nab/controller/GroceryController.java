@@ -28,23 +28,31 @@ public class GroceryController {
         return service.searchGroceries(name, category, tags);
     }
 
-    @GetMapping("/{id}")
-    public Grocery getGrocery(@PathVariable String id) {
-        return null;
+    @PostMapping
+    public String createGrocery(@RequestBody Grocery req) {
+        return service.createGrocery(req);
     }
 
-    @PostMapping("/{id}")
-    public ResponseEntity<Void> createGrocery(@PathVariable String id, @RequestBody Grocery req) {
-        return ResponseEntity.noContent().build();
+    @GetMapping("/{id}")
+    public ResponseEntity<Grocery> getGrocery(@PathVariable String id) {
+        return service.getGrocery(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> editGrocery(@PathVariable String id, @RequestBody Grocery req) {
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<?> editGrocery(@PathVariable String id, @RequestBody Grocery req) {
+        return service
+                .updateGrocery(id, req)
+                .map(g -> ResponseEntity.noContent().build())
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteGrocery(@PathVariable String id) {
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Grocery> deleteGrocery(@PathVariable String id) {
+        return service
+                .deleteGrocery(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 }

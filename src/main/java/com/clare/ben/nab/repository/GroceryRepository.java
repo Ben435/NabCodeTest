@@ -68,5 +68,4 @@ public class GroceryRepository {
 
         return Optional.ofNullable(store.remove(id));
     }
-
 }
