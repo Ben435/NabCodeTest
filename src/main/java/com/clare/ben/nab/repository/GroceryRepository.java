@@ -2,7 +2,6 @@ package com.clare.ben.nab.repository;
 
 import com.clare.ben.nab.model.Grocery;
 import com.google.common.base.Preconditions;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
@@ -21,15 +20,15 @@ public class GroceryRepository {
         store = new HashMap<>();
     }
 
-    public Collection<Grocery> queryGroceries(@Nullable String name, Collection<String> tags, @Nullable String category) {
-        Preconditions.checkNotNull(tags);
+    public Collection<Grocery> searchGroceries(SearchGroceries search) {
+        Preconditions.checkNotNull(search);
 
         return store
                 .values()
                 .stream()
-                .filter(grocery -> Objects.isNull(name) || grocery.getName().toLowerCase().contains(name.toLowerCase()))
-                .filter(grocery -> tags.size() == 0 || grocery.getTags().containsAll(tags))
-                .filter(grocery -> Objects.isNull(category) || grocery.getCategory().equalsIgnoreCase(category))
+                .filter(grocery -> Objects.isNull(search.getName()) || grocery.getName().toLowerCase().contains(search.getName().toLowerCase()))
+                .filter(grocery -> search.getTags().size() == 0 || grocery.getTags().containsAll(search.getTags()))
+                .filter(grocery -> Objects.isNull(search.getCategory()) || grocery.getCategory().equalsIgnoreCase(search.getCategory()))
                 .collect(Collectors.toUnmodifiableList());
     }
 

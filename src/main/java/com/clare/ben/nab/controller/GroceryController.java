@@ -1,7 +1,5 @@
 package com.clare.ben.nab.controller;
 
-import com.clare.ben.nab.controller.request.CreateGroceryRequest;
-import com.clare.ben.nab.controller.request.EditGroceryRequest;
 import com.clare.ben.nab.model.Grocery;
 import com.clare.ben.nab.service.GroceryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,12 +34,12 @@ public class GroceryController extends AbstractApiController {
     }
 
     @PostMapping("/{id}")
-    public ResponseEntity<Void> createGrocery(@PathVariable String id, @RequestBody CreateGroceryRequest req) {
+    public ResponseEntity<Void> createGrocery(@PathVariable String id, @RequestBody Grocery req) {
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/{id}")
-    public ResponseEntity<Void> editGrocery(@PathVariable String id, @RequestBody EditGroceryRequest req) {
+    public ResponseEntity<Void> editGrocery(@PathVariable String id, @RequestBody Grocery req) {
         return ResponseEntity.noContent().build();
     }
 

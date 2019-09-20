@@ -23,13 +23,18 @@ public class GroceryRepositoryTest {
     }
 
     @Test(expected = NullPointerException.class)
-    public void queryGroceries_withNullTags_throwsException() {
-        repository.queryGroceries("", null, null);
+    public void queryGroceries_withNullSearchObject_throwsException() {
+        repository.searchGroceries(null);
     }
 
     @Test
     public void queryGroceries_withNoParams_returnsAllItems() {
-        Collection<Grocery> groceries = repository.queryGroceries("", Collections.emptyList(), null);
+
+        SearchGroceries query = SearchGroceries
+                .builder()
+                .build();
+
+        Collection<Grocery> groceries = repository.searchGroceries(query);
 
         Assert.assertEquals(10, groceries.size());
     }
@@ -39,7 +44,12 @@ public class GroceryRepositoryTest {
         Grocery g = new Grocery("hello world!", "french");
         repository.putGrocery(g);
 
-        Collection<Grocery> groceries = repository.queryGroceries("llo w", Collections.emptyList(), null);
+        SearchGroceries query = SearchGroceries
+                .builder()
+                .name("llo w")
+                .build();
+
+        Collection<Grocery> groceries = repository.searchGroceries(query);
 
         Assert.assertEquals(1, groceries.size());
         Assert.assertTrue(groceries.contains(g));
@@ -50,7 +60,12 @@ public class GroceryRepositoryTest {
         Grocery g = new Grocery("hello world!", "french");
         repository.putGrocery(g);
 
-        Collection<Grocery> groceries = repository.queryGroceries("", Collections.emptyList(), "french");
+        SearchGroceries query = SearchGroceries
+                .builder()
+                .category("french")
+                .build();
+
+        Collection<Grocery> groceries = repository.searchGroceries(query);
 
         Assert.assertEquals(1, groceries.size());
         Assert.assertTrue(groceries.contains(g));
@@ -61,7 +76,12 @@ public class GroceryRepositoryTest {
         Grocery g = new Grocery("hello world!", "french", Collections.singletonList("tag"));
         repository.putGrocery(g);
 
-        Collection<Grocery> groceries = repository.queryGroceries(null, Collections.singletonList("tag"), null);
+        SearchGroceries query = SearchGroceries
+                .builder()
+                .tags(Collections.singletonList("tag"))
+                .build();
+
+        Collection<Grocery> groceries = repository.searchGroceries(query);
 
         Assert.assertEquals(1, groceries.size());
         Assert.assertTrue(groceries.contains(g));
@@ -72,7 +92,14 @@ public class GroceryRepositoryTest {
         Grocery g = new Grocery("hello world!", "french", Collections.singletonList("tag"));
         repository.putGrocery(g);
 
-        Collection<Grocery> groceries = repository.queryGroceries("llo", Collections.singletonList("tag"), "french");
+        SearchGroceries query = SearchGroceries
+                .builder()
+                .name("llo")
+                .tags(Collections.singletonList("tag"))
+                .category("french")
+                .build();
+
+        Collection<Grocery> groceries = repository.searchGroceries(query);
 
         Assert.assertEquals(1, groceries.size());
         Assert.assertTrue(groceries.contains(g));
@@ -83,7 +110,14 @@ public class GroceryRepositoryTest {
         Grocery g = new Grocery("hello world!", "french", Collections.singletonList("tag"));
         repository.putGrocery(g);
 
-        Collection<Grocery> groceries = repository.queryGroceries("llo", Collections.singletonList("gat"), "french");
+        SearchGroceries query = SearchGroceries
+                .builder()
+                .name("llo")
+                .tags(Collections.singletonList("gat"))
+                .category("french")
+                .build();
+
+        Collection<Grocery> groceries = repository.searchGroceries(query);
 
         Assert.assertEquals(0, groceries.size());
     }
