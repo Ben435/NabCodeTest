@@ -1,6 +1,7 @@
 package com.clare.ben.nab.repository;
 
 import com.clare.ben.nab.model.Grocery;
+import com.clare.ben.nab.repository.query.SearchGroceries;
 import com.google.common.base.Preconditions;
 import org.springframework.stereotype.Repository;
 
