@@ -46,7 +46,7 @@ public class GroceryRepositoryTest {
 
         SearchGroceries query = SearchGroceries
                 .builder()
-                .name("llo w")
+                .partialName("llo w")
                 .build();
 
         Collection<Grocery> groceries = repository.searchGroceries(query);
@@ -94,7 +94,7 @@ public class GroceryRepositoryTest {
 
         SearchGroceries query = SearchGroceries
                 .builder()
-                .name("llo")
+                .partialName("llo")
                 .tags(Collections.singletonList("tag"))
                 .category("french")
                 .build();
@@ -112,7 +112,7 @@ public class GroceryRepositoryTest {
 
         SearchGroceries query = SearchGroceries
                 .builder()
-                .name("llo")
+                .partialName("llo")
                 .tags(Collections.singletonList("gat"))
                 .category("french")
                 .build();

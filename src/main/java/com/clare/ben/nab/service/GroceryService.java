@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Objects;
 
 @Service
 public class GroceryService {
@@ -18,9 +20,13 @@ public class GroceryService {
     }
 
     public Collection<Grocery> searchGroceries(String name, String category, Collection<String> tags) {
+        if (Objects.isNull(tags)) {
+            tags = Collections.emptyList();
+        }
+
         SearchGroceries query = SearchGroceries
                 .builder()
-                .name(name)
+                .partialName(name)
                 .category(category)
                 .tags(tags)
                 .build();

@@ -11,8 +11,8 @@ import java.util.Collections;
 @Getter
 @AllArgsConstructor
 public class SearchGroceries {
-    private String name;
+    private String partialName;
+    private String category;
     @Builder.Default
     private Collection<String> tags = Collections.emptyList();
-    private String category;
 }

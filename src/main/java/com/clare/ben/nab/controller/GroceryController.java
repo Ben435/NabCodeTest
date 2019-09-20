@@ -22,10 +22,10 @@ public class GroceryController extends AbstractApiController {
     @GetMapping
     public Collection<Grocery> searchGroceries(
             @RequestParam(value = "name", required = false) String name,
-            @RequestParam(value = "tag", required = false) Collection<String> tags,
-            @RequestParam(value = "category", required = false) String category
+            @RequestParam(value = "category", required = false) String category,
+            @RequestParam(value = "tag", required = false) Collection<String> tags
     ) {
-        return null;
+        return service.searchGroceries(name, category, tags);
     }
 
     @GetMapping("/{id}")

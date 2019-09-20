@@ -26,9 +26,9 @@ public class GroceryRepository {
         return store
                 .values()
                 .stream()
-                .filter(grocery -> Objects.isNull(search.getName()) || grocery.getName().toLowerCase().contains(search.getName().toLowerCase()))
-                .filter(grocery -> search.getTags().size() == 0 || grocery.getTags().containsAll(search.getTags()))
+                .filter(grocery -> Objects.isNull(search.getPartialName()) || grocery.getName().toLowerCase().contains(search.getPartialName().toLowerCase()))
                 .filter(grocery -> Objects.isNull(search.getCategory()) || grocery.getCategory().equalsIgnoreCase(search.getCategory()))
+                .filter(grocery -> grocery.getTags().containsAll(search.getTags()))
                 .collect(Collectors.toUnmodifiableList());
     }
 
