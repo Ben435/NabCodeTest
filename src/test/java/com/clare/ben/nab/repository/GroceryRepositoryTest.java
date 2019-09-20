@@ -111,14 +111,34 @@ public class GroceryRepositoryTest {
 
     @Test
     public void putGrocery_withNoId_generatesIdAndPutsInStore() {
+        Grocery expected = new Grocery("hello world!", "french", Collections.singletonList("tag"));
+        String id = repository.putGrocery(expected);
+
+        Optional<Grocery> actual = repository.getGrocery(id);
+
+        Assert.assertTrue(actual.isPresent());
+        Assert.assertEquals(expected, actual.get());
     }
 
     @Test
     public void removeGrocery_withExistingId_removesItemAndReturnsRemoved() {
+        Grocery expected = new Grocery("hello world!", "french", Collections.singletonList("tag"));
+        String id = repository.putGrocery(expected);
+
+        Optional<Grocery> actual = repository.removeGrocery(id);
+
+        Assert.assertTrue(actual.isPresent());
+        Assert.assertEquals(expected, actual.get());
     }
 
     @Test
     public void removeGrocery_withNonExistingId_returnsEmpty() {
+        Grocery expected = new Grocery("hello world!", "french", Collections.singletonList("tag"));
+        String id = repository.putGrocery(expected);
+
+        Optional<Grocery> actual = repository.removeGrocery(id.substring(id.length() / 2));
+
+        Assert.assertTrue(actual.isEmpty());
     }
 
     private void populateStoreWithMocks() {
