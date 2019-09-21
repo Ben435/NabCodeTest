@@ -1,6 +1,7 @@
 package com.clare.ben.nab.repository;
 
 import com.clare.ben.nab.model.Grocery;
+import com.clare.ben.nab.model.Tag;
 import com.clare.ben.nab.repository.query.SearchGroceries;
 import org.junit.Assert;
 import org.junit.Before;
@@ -18,9 +19,15 @@ public class GroceryRepositoryTest {
     @InjectMocks
     GroceryRepository repository;
 
+    private Tag mockTag;
+    private Grocery dummyGrocery;
+
     @Before
     public void setup() {
         populateStoreWithMocks();
+
+        mockTag = new Tag("tag");
+        dummyGrocery = new Grocery("hello world!", "french", Collections.singleton(mockTag));
     }
 
     @Test(expected = NullPointerException.class)
@@ -42,7 +49,7 @@ public class GroceryRepositoryTest {
 
     @Test
     public void searchGroceries_withPartialName_returnsMatchingItems() {
-        Grocery g = new Grocery("hello world!", "french");
+        Grocery g = dummyGrocery;
         repository.putGrocery(g);
 
         SearchGroceries query = SearchGroceries
@@ -58,7 +65,7 @@ public class GroceryRepositoryTest {
 
     @Test
     public void searchGroceries_withCategory_returnsMatchingItems() {
-        Grocery g = new Grocery("hello world!", "french");
+        Grocery g = dummyGrocery;
         repository.putGrocery(g);
 
         SearchGroceries query = SearchGroceries
@@ -74,12 +81,12 @@ public class GroceryRepositoryTest {
 
     @Test
     public void searchGroceries_withTags_returnsMatchingItems() {
-        Grocery g = new Grocery("hello world!", "french", Collections.singletonList("tag"));
+        Grocery g = dummyGrocery;
         repository.putGrocery(g);
 
         SearchGroceries query = SearchGroceries
                 .builder()
-                .tags(Collections.singletonList("tag"))
+                .tags(Collections.singletonList(mockTag.getName()))
                 .build();
 
         Collection<Grocery> groceries = repository.searchGroceries(query);
@@ -90,13 +97,13 @@ public class GroceryRepositoryTest {
 
     @Test
     public void searchGroceries_withPartialNameAndCategoryAndTags_returnsMatchingItems() {
-        Grocery g = new Grocery("hello world!", "french", Collections.singletonList("tag"));
+        Grocery g = dummyGrocery;
         repository.putGrocery(g);
 
         SearchGroceries query = SearchGroceries
                 .builder()
                 .partialName("llo")
-                .tags(Collections.singletonList("tag"))
+                .tags(Collections.singletonList(mockTag.getName()))
                 .category("french")
                 .build();
 
@@ -108,7 +115,7 @@ public class GroceryRepositoryTest {
 
     @Test
     public void searchGroceries_withPartialNameAndCategoryAndTagsButNoMatchingItemInStore_returnsNoItems() {
-        Grocery g = new Grocery("hello world!", "french", Collections.singletonList("tag"));
+        Grocery g = dummyGrocery;
         repository.putGrocery(g);
 
         SearchGroceries query = SearchGroceries
@@ -125,8 +132,8 @@ public class GroceryRepositoryTest {
 
     @Test
     public void getGrocery_forExistingGrocery_returnsGrocery() {
-        Grocery expected = new Grocery("hello world!", "french", Collections.singletonList("tag"));
-        String id = repository.putGrocery(expected);
+        Grocery expected = dummyGrocery;
+        String id = repository.putGrocery(expected).getId();
 
         Optional<Grocery> actual = repository.getGrocery(id);
 
@@ -136,8 +143,8 @@ public class GroceryRepositoryTest {
 
     @Test
     public void getGrocery_forNonExistingId_returnsEmpty() {
-        Grocery expected = new Grocery("hello world!", "french", Collections.singletonList("tag"));
-        String id = repository.putGrocery(expected);
+        Grocery expected = dummyGrocery;
+        String id = repository.putGrocery(expected).getId();
 
         Optional<Grocery> actual = repository.getGrocery(id.substring(id.length() / 2));
 
@@ -146,8 +153,8 @@ public class GroceryRepositoryTest {
 
     @Test
     public void putGrocery_withNoId_generatesIdAndPutsInStore() {
-        Grocery expected = new Grocery("hello world!", "french", Collections.singletonList("tag"));
-        String id = repository.putGrocery(expected);
+        Grocery expected = dummyGrocery;
+        String id = repository.putGrocery(expected).getId();
 
         Optional<Grocery> actual = repository.getGrocery(id);
 
@@ -157,8 +164,8 @@ public class GroceryRepositoryTest {
 
     @Test
     public void deleteGrocery_withExistingId_removesItemAndReturnsRemoved() {
-        Grocery expected = new Grocery("hello world!", "french", Collections.singletonList("tag"));
-        String id = repository.putGrocery(expected);
+        Grocery expected = dummyGrocery;
+        String id = repository.putGrocery(expected).getId();
 
         Optional<Grocery> actual = repository.deleteGrocery(id);
 
@@ -168,8 +175,8 @@ public class GroceryRepositoryTest {
 
     @Test
     public void deleteGrocery_withNonExistingId_returnsEmpty() {
-        Grocery expected = new Grocery("hello world!", "french", Collections.singletonList("tag"));
-        String id = repository.putGrocery(expected);
+        Grocery expected = dummyGrocery;
+        String id = repository.putGrocery(expected).getId();
 
         Optional<Grocery> actual = repository.deleteGrocery(id.substring(id.length() / 2));
 

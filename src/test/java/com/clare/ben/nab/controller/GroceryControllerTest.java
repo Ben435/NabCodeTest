@@ -3,6 +3,7 @@ package com.clare.ben.nab.controller;
 import com.clare.ben.nab.model.Grocery;
 import com.clare.ben.nab.service.GroceryService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hamcrest.beans.SamePropertyValuesAs;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +14,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import java.util.Collections;
+
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 @RunWith(SpringRunner.class)
@@ -32,31 +35,40 @@ public class GroceryControllerTest {
     private ObjectMapper mapper = new ObjectMapper();
 
     @Test
-    public void searchGroceries() {
+    public void searchGroceries_withValidParams_callsServiceAndReturnsSearchResults() throws Exception {
+        Grocery expected = validDummyGrocery();
+        when(service.searchGroceries(any(), any(), any())).thenReturn(Collections.singletonList(expected));
+
+        mvc.perform(get("/api/grocery").param("name", "mat"))
+                .andExpect(res -> {
+                    Grocery[] actual = mapper.readerFor(Grocery[].class).readValue(res.getResponse().getContentAsString());
+
+                    assertThat(actual[0], new SamePropertyValuesAs<>(expected));
+
+                    verify(service).searchGroceries(eq("mat"), isNull(), isNull());
+                });
     }
 
     @Test
     public void createGrocery_withValidGrocery_callsServiceAndReturnsId() throws Exception {
-        String expectedId = "1234";
-        when(service.createGrocery(any())).thenReturn(expectedId);
+        Grocery expected = validDummyGrocery();
+        expected.setId("1234");
+        when(service.createGrocery(any())).thenReturn(expected);
 
         mvc.perform(
                 post("/api/grocery")
-                        .content(mapper.writeValueAsBytes(new Grocery("tomato", "vegetable")))
+                        .content(mapper.writeValueAsBytes(validDummyGrocery()))
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(res -> {
-                    assertEquals(expectedId, res.getResponse().getContentAsString());
+                    Grocery actual = mapper.readerFor(Grocery[].class).readValue(res.getResponse().getContentAsString());
+                    assertThat(actual, new SamePropertyValuesAs<>(expected));
                     verify(service, only()).createGrocery(any());
                 });
-
     }
 
     @Test
     public void createGrocery_withInvalidGrocery_throwsValidationError() throws Exception {
-        String expectedId = "1234";
-        when(service.createGrocery(any())).thenReturn(expectedId);
-
         mvc.perform(
                 post("/api/grocery")
                         .content(mapper.writeValueAsBytes(new Grocery("", "", null)))
@@ -71,7 +83,8 @@ public class GroceryControllerTest {
     }
 
     @Test
-    public void getGrocery() {
+    public void getGrocery_withValidId_returnsObject() {
+
     }
 
     @Test
@@ -80,5 +93,9 @@ public class GroceryControllerTest {
 
     @Test
     public void deleteGrocery() {
+    }
+
+    private Grocery validDummyGrocery() {
+        return new Grocery("tomato", "vegetable");
     }
 }

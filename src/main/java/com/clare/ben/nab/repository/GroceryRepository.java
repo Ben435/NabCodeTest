@@ -3,6 +3,7 @@ package com.clare.ben.nab.repository;
 import com.clare.ben.nab.model.Grocery;
 import com.clare.ben.nab.repository.query.SearchGroceries;
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
@@ -39,29 +40,14 @@ public class GroceryRepository {
         return Optional.ofNullable(store.get(id));
     }
 
-    public String putGrocery(Grocery grocery) {
+    public Grocery putGrocery(Grocery grocery) {
         Preconditions.checkNotNull(grocery);
 
-        return this.putGrocery(UUID.randomUUID().toString(), grocery);
-    }
-
-    public Optional<Grocery> updateGrocery(String id, Grocery grocery) {
-        Preconditions.checkNotNull(id);
-        Preconditions.checkNotNull(grocery);
-
-        if (getGrocery(id).isPresent()) {
-            putGrocery(id, grocery);
-
-            return Optional.of(grocery);
-        } else {
-            return Optional.empty();
+        if (Strings.isNullOrEmpty(grocery.getId())) {
+            grocery.setId(UUID.randomUUID().toString());
         }
-    }
 
-    private String putGrocery(String id, Grocery grocery) {
-        store.put(id, grocery);
-
-        return id;
+        return store.put(grocery.getId(), grocery);
     }
 
     public Optional<Grocery> deleteGrocery(String id) {
