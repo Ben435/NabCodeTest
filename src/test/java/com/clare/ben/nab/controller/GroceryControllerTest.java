@@ -93,11 +93,28 @@ public class GroceryControllerTest {
     }
 
     @Test
-    public void editGrocery() {
+    public void getGrocery_withInvalidId_returnsNotFound() {
+
     }
 
     @Test
-    public void deleteGrocery() {
+    public void editGrocery_withValidIdAndUpdatedObject_updatesObjectAndReturnsNewVersion() {
+    }
+
+    @Test
+    public void editGrocery_withInvalidId_returnsNotFound() {
+    }
+
+    @Test
+    public void editGrocery_withInvalidUpdatedObject_throwsValidationError() {
+    }
+
+    @Test
+    public void deleteGrocery_withValidId_deletesObjectAndReturnsObject() {
+    }
+
+    @Test
+    public void deleteGrocery_withInvalidId_returnsNotFound() {
     }
 
     private Grocery validDummyGrocery() {
