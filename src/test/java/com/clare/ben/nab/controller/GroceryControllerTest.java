@@ -16,12 +16,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.util.Collections;
+import java.util.Optional;
 
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(GroceryController.class)
@@ -35,12 +35,14 @@ public class GroceryControllerTest {
 
     private ObjectMapper mapper = new ObjectMapper();
 
+    private static final String API_PREFIX = "/api/grocery";
+
     @Test
     public void searchGroceries_withValidParams_callsServiceAndReturnsSearchResults() throws Exception {
         Grocery expected = validDummyGrocery();
         when(service.searchGroceries(any(), any(), any())).thenReturn(Collections.singletonList(expected));
 
-        mvc.perform(get("/api/grocery").param("name", "mat"))
+        mvc.perform(get(API_PREFIX).param("name", "mat"))
                 .andExpect(res -> {
                     Grocery[] actual = mapper.readerFor(Grocery[].class).readValue(res.getResponse().getContentAsString());
 
@@ -53,13 +55,12 @@ public class GroceryControllerTest {
     @Test
     public void createGrocery_withValidGrocery_callsServiceAndReturnsId() throws Exception {
         Grocery expected = validDummyGrocery();
-        expected.setId("1234");
         when(service.createGrocery(any())).thenReturn(expected);
 
         CreateGroceryRequest req = CreateGroceryRequest.builder().name(expected.getName()).category(expected.getCategory()).tags(expected.getTags()).build();
 
         mvc.perform(
-                post("/api/grocery")
+                post(API_PREFIX)
                         .content(mapper.writeValueAsBytes(req))
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .accept(MediaType.APPLICATION_JSON_UTF8))
@@ -75,7 +76,7 @@ public class GroceryControllerTest {
         CreateGroceryRequest req = CreateGroceryRequest.builder().build();
 
         mvc.perform(
-                post("/api/grocery")
+                post(API_PREFIX)
                         .content(mapper.writeValueAsBytes(req))
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .accept(MediaType.APPLICATION_JSON_UTF8))
@@ -88,36 +89,127 @@ public class GroceryControllerTest {
     }
 
     @Test
-    public void getGrocery_withValidId_returnsObject() {
+    public void getGrocery_withValidId_returnsObject() throws Exception {
+        Grocery expected = validDummyGrocery();
 
+        when(service.getGrocery(expected.getId())).thenReturn(Optional.of(expected));
+
+        mvc.perform(
+                get(API_PREFIX + "/{id}", expected.getId())
+                        .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(res -> {
+                    Grocery actual = mapper.readerFor(Grocery.class).readValue(res.getResponse().getContentAsString());
+                    assertThat(actual, new SamePropertyValuesAs<>(expected));
+
+                    verify(service).getGrocery(expected.getId());
+                });
     }
 
     @Test
-    public void getGrocery_withInvalidId_returnsNotFound() {
+    public void getGrocery_withInvalidId_returnsNotFound() throws Exception {
+        String dummyId = "nope";
+        when(service.getGrocery(dummyId)).thenReturn(Optional.empty());
 
+        mvc.perform(
+                get(API_PREFIX + "/{id}", dummyId)
+                        .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(res -> {
+                    assertEquals(404, res.getResponse().getStatus());
+                    verify(service).getGrocery(dummyId);
+                });
     }
 
     @Test
-    public void editGrocery_withValidIdAndUpdatedObject_updatesObjectAndReturnsNewVersion() {
+    public void editGrocery_withValidIdAndUpdatedObject_updatesObjectAndReturnsNewVersion() throws Exception {
+        Grocery expected = validDummyGrocery();
+
+        when(service.updateGrocery(any(Grocery.class))).thenReturn(Optional.of(expected));
+
+        mvc.perform(
+                put(API_PREFIX)
+                        .content(mapper.writeValueAsString(expected))
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(res -> {
+                    assertEquals(204, res.getResponse().getStatus());
+
+                    verify(service).updateGrocery(any(Grocery.class));
+                });
     }
 
     @Test
-    public void editGrocery_withInvalidId_returnsNotFound() {
+    public void editGrocery_withInvalidId_returnsNotFound() throws Exception {
+        Grocery expected = validDummyGrocery();
+
+        when(service.updateGrocery(any(Grocery.class))).thenReturn(Optional.empty());
+
+        mvc.perform(
+                put(API_PREFIX)
+                        .content(mapper.writeValueAsString(expected))
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(res -> {
+                    assertEquals(404, res.getResponse().getStatus());
+
+                    verify(service).updateGrocery(any(Grocery.class));
+                });
     }
 
     @Test
-    public void editGrocery_withInvalidUpdatedObject_throwsValidationError() {
+    public void editGrocery_withInvalidUpdatedObject_throwsValidationError() throws Exception {
+        Grocery dummy = validDummyGrocery();
+
+        dummy.setName("");
+
+        mvc.perform(
+                put(API_PREFIX)
+                        .content(mapper.writeValueAsString(dummy))
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(res -> {
+                    assertNotNull(res.getResolvedException());
+                    assertEquals(MethodArgumentNotValidException.class, res.getResolvedException().getClass());
+
+                    verify(service, never()).updateGrocery(any(Grocery.class));
+                });
     }
 
     @Test
-    public void deleteGrocery_withValidId_deletesObjectAndReturnsObject() {
+    public void deleteGrocery_withValidId_deletesObjectAndReturnsObject() throws Exception {
+        Grocery expected = validDummyGrocery();
+
+        when(service.deleteGrocery(expected.getId())).thenReturn(Optional.of(expected));
+
+        mvc.perform(
+                delete(API_PREFIX + "/{id}", expected.getId())
+                        .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(res -> {
+                    Grocery actual = mapper.readerFor(Grocery.class).readValue(res.getResponse().getContentAsString());
+                    assertThat(actual, new SamePropertyValuesAs<>(expected));
+
+                    verify(service).deleteGrocery(expected.getId());
+                });
     }
 
     @Test
-    public void deleteGrocery_withInvalidId_returnsNotFound() {
+    public void deleteGrocery_withInvalidId_returnsNotFound() throws Exception {
+        String dummyId = "nope";
+        when(service.deleteGrocery(dummyId)).thenReturn(Optional.empty());
+
+        mvc.perform(
+                delete(API_PREFIX + "/{id}", dummyId)
+                        .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(res -> {
+                    assertEquals(404, res.getResponse().getStatus());
+
+                    verify(service).deleteGrocery(any());
+                });
     }
 
     private Grocery validDummyGrocery() {
-        return new Grocery("tomato", "vegetable");
+        Grocery g = new Grocery("tomato", "vegetable");
+        g.setId("1234");
+
+        return g;
     }
 }
