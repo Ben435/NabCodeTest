@@ -1,7 +1,7 @@
 const path = require('path');
 
 module.exports = {
-    entry: path.resolve('src', 'main', 'js', 'app.js'),
+    entry: path.resolve('src', 'main', 'js', 'index.js'),
     plugins: [],
     output: {
         path: path.resolve(__dirname, 'src', 'main', 'resources', 'static', 'built'),
