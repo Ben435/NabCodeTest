@@ -1,7 +1,6 @@
 package com.clare.ben.nab.controller;
 
 import com.clare.ben.nab.controller.request.CreateGroceryRequest;
-import com.clare.ben.nab.controller.request.EditGroceryRequest;
 import com.clare.ben.nab.model.Grocery;
 import com.clare.ben.nab.service.GroceryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,18 +35,18 @@ public class GroceryController {
         return service.createGrocery(req);
     }
 
+    @PutMapping
+    public ResponseEntity<?> editGrocery(@RequestBody @Valid Grocery req) {
+        return service
+                .updateGrocery(req)
+                .map(g -> ResponseEntity.noContent().build())
+                .orElse(ResponseEntity.notFound().build());
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Grocery> getGrocery(@PathVariable String id) {
         return service.getGrocery(id)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<?> editGrocery(@PathVariable String id, @RequestBody EditGroceryRequest req) {
-        return service
-                .updateGrocery(id, req)
-                .map(g -> ResponseEntity.noContent().build())
                 .orElse(ResponseEntity.notFound().build());
     }
 

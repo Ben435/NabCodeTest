@@ -1,13 +1,11 @@
 package com.clare.ben.nab.service;
 
 import com.clare.ben.nab.controller.request.CreateGroceryRequest;
-import com.clare.ben.nab.controller.request.EditGroceryRequest;
 import com.clare.ben.nab.model.Grocery;
 import com.clare.ben.nab.model.Tag;
 import com.clare.ben.nab.repository.GroceryRepository;
 import com.clare.ben.nab.repository.query.SearchGroceries;
 import com.google.common.base.Preconditions;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -59,24 +57,10 @@ public class GroceryService {
         );
     }
 
-    public Optional<Grocery> updateGrocery(String id, EditGroceryRequest editReq) {
+    public Optional<Grocery> updateGrocery(Grocery newGrocery) {
         return groceryRepository
-                .getGrocery(id)
-                .map(g -> {
-                    if (!StringUtils.isEmpty(editReq.getName())) {
-                        g.setName(editReq.getName());
-                    }
-
-                    if (!StringUtils.isEmpty(editReq.getCategory())) {
-                        g.setCategory(editReq.getCategory());
-                    }
-
-                    if (editReq.getTags() != null) {
-                        g.setTags(editReq.getTags());
-                    }
-
-                    return g;
-                })
+                .getGrocery(newGrocery.getId())
+                .map(old -> newGrocery) // Not doing anything fancy, just "if exists, replace".
                 .map(groceryRepository::putGrocery);
     }
 
