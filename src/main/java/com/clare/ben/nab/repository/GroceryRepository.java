@@ -1,6 +1,7 @@
 package com.clare.ben.nab.repository;
 
 import com.clare.ben.nab.model.Grocery;
+import com.clare.ben.nab.model.Tag;
 import com.clare.ben.nab.repository.query.SearchGroceries;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
@@ -30,7 +31,11 @@ public class GroceryRepository {
                 .stream()
                 .filter(grocery -> Objects.isNull(search.getPartialName()) || grocery.getName().toLowerCase().contains(search.getPartialName().toLowerCase()))
                 .filter(grocery -> Objects.isNull(search.getCategory()) || grocery.getCategory().equalsIgnoreCase(search.getCategory()))
-                .filter(grocery -> grocery.getTags().containsAll(search.getTags()))
+                .filter(grocery -> {
+                    List<String> currentItemTags = grocery.getTags().stream().map(Tag::getName).collect(Collectors.toList());
+                    List<String> searchTags = search.getTags().stream().map(Tag::getName).collect(Collectors.toList());
+                    return currentItemTags.containsAll(searchTags);
+                })
                 .collect(Collectors.toUnmodifiableList());
     }
 
@@ -47,7 +52,9 @@ public class GroceryRepository {
             grocery.setId(UUID.randomUUID().toString());
         }
 
-        return store.put(grocery.getId(), grocery);
+        store.put(grocery.getId(), grocery);
+
+        return grocery;
     }
 
     public Optional<Grocery> deleteGrocery(String id) {

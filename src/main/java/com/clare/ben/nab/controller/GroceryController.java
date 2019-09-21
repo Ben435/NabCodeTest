@@ -1,5 +1,6 @@
 package com.clare.ben.nab.controller;
 
+import com.clare.ben.nab.controller.request.CreateGroceryRequest;
 import com.clare.ben.nab.controller.request.EditGroceryRequest;
 import com.clare.ben.nab.model.Grocery;
 import com.clare.ben.nab.service.GroceryService;
@@ -31,7 +32,7 @@ public class GroceryController {
     }
 
     @PostMapping
-    public Grocery createGrocery(@RequestBody @Valid Grocery req) {
+    public Grocery createGrocery(@RequestBody @Valid CreateGroceryRequest req) {
         return service.createGrocery(req);
     }
 
@@ -43,7 +44,7 @@ public class GroceryController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> editGrocery(@PathVariable String id, @RequestBody @Valid EditGroceryRequest req) {
+    public ResponseEntity<?> editGrocery(@PathVariable String id, @RequestBody EditGroceryRequest req) {
         return service
                 .updateGrocery(id, req)
                 .map(g -> ResponseEntity.noContent().build())

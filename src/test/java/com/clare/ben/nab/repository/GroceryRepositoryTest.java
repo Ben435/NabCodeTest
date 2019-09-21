@@ -19,15 +19,16 @@ public class GroceryRepositoryTest {
     @InjectMocks
     GroceryRepository repository;
 
-    private Tag mockTag;
+    private Tag dummyTag;
     private Grocery dummyGrocery;
 
     @Before
     public void setup() {
         populateStoreWithMocks();
 
-        mockTag = new Tag("tag");
-        dummyGrocery = new Grocery("hello world!", "french", Collections.singleton(mockTag));
+        dummyTag = new Tag("tag");
+        dummyGrocery = new Grocery("hello world!", "french", Collections.singleton(dummyTag));
+        dummyGrocery.setId("123");
     }
 
     @Test(expected = NullPointerException.class)
@@ -86,7 +87,7 @@ public class GroceryRepositoryTest {
 
         SearchGroceries query = SearchGroceries
                 .builder()
-                .tags(Collections.singletonList(mockTag.getName()))
+                .tags(Collections.singletonList(new Tag(dummyTag.getName())))
                 .build();
 
         Collection<Grocery> groceries = repository.searchGroceries(query);
@@ -103,7 +104,7 @@ public class GroceryRepositoryTest {
         SearchGroceries query = SearchGroceries
                 .builder()
                 .partialName("llo")
-                .tags(Collections.singletonList(mockTag.getName()))
+                .tags(Collections.singletonList(new Tag(dummyTag.getName())))
                 .category("french")
                 .build();
 
@@ -121,7 +122,7 @@ public class GroceryRepositoryTest {
         SearchGroceries query = SearchGroceries
                 .builder()
                 .partialName("llo")
-                .tags(Collections.singletonList("gat"))
+                .tags(Collections.singletonList(new Tag("gat")))
                 .category("french")
                 .build();
 

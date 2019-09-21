@@ -1,5 +1,6 @@
 package com.clare.ben.nab.controller;
 
+import com.clare.ben.nab.controller.request.CreateGroceryRequest;
 import com.clare.ben.nab.model.Grocery;
 import com.clare.ben.nab.service.GroceryService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -55,13 +56,15 @@ public class GroceryControllerTest {
         expected.setId("1234");
         when(service.createGrocery(any())).thenReturn(expected);
 
+        CreateGroceryRequest req = CreateGroceryRequest.builder().name(expected.getName()).category(expected.getCategory()).tags(expected.getTags()).build();
+
         mvc.perform(
                 post("/api/grocery")
-                        .content(mapper.writeValueAsBytes(validDummyGrocery()))
+                        .content(mapper.writeValueAsBytes(req))
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(res -> {
-                    Grocery actual = mapper.readerFor(Grocery[].class).readValue(res.getResponse().getContentAsString());
+                    Grocery actual = mapper.readerFor(Grocery.class).readValue(res.getResponse().getContentAsString());
                     assertThat(actual, new SamePropertyValuesAs<>(expected));
                     verify(service, only()).createGrocery(any());
                 });
@@ -69,9 +72,11 @@ public class GroceryControllerTest {
 
     @Test
     public void createGrocery_withInvalidGrocery_throwsValidationError() throws Exception {
+        CreateGroceryRequest req = CreateGroceryRequest.builder().build();
+
         mvc.perform(
                 post("/api/grocery")
-                        .content(mapper.writeValueAsBytes(new Grocery("", "", null)))
+                        .content(mapper.writeValueAsBytes(req))
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(res -> {
