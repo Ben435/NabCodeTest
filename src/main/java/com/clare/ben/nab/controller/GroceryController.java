@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Collection;
 
 @RestController
@@ -29,7 +30,7 @@ public class GroceryController {
     }
 
     @PostMapping
-    public String createGrocery(@RequestBody Grocery req) {
+    public String createGrocery(@RequestBody @Valid Grocery req) {
         return service.createGrocery(req);
     }
 
@@ -41,7 +42,7 @@ public class GroceryController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> editGrocery(@PathVariable String id, @RequestBody Grocery req) {
+    public ResponseEntity<?> editGrocery(@PathVariable String id, @RequestBody @Valid Grocery req) {
         return service
                 .updateGrocery(id, req)
                 .map(g -> ResponseEntity.noContent().build())

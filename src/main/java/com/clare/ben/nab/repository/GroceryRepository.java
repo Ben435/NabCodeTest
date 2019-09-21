@@ -9,8 +9,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Emulating some field-queryable database.
- * Eg: SQL, document based
+ * Emulating a field-queryable database.
+ * Eg: SQL or document based
  * */
 @Repository
 public class GroceryRepository {
