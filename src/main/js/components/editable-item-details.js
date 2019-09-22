@@ -1,6 +1,5 @@
 import React from "react";
 import './editable-item-details.scss';
-import {withRouter} from "react-router-dom";
 
 class EditableItemDetails extends React.Component {
     constructor(props) {
@@ -34,4 +33,4 @@ class EditableItemDetails extends React.Component {
     }
 }
 
-export default withRouter(EditableItemDetails);
+export default EditableItemDetails;

@@ -1,8 +1,8 @@
 import React from "react";
 import {BrowserRouter as Router, Route} from "react-router-dom";
-import Home from './pages/home';
-import Details from './pages/details';
-import Create from './pages/create';
+import HomePage from './pages/home-page';
+import DetailsPage from './pages/details-page';
+import CreatePage from './pages/create-page';
 import './app.scss';
 
 export default class App extends React.Component {
@@ -15,9 +15,9 @@ export default class App extends React.Component {
             <Router>
                 <div className="app">
                     <h1>NAB Code Test</h1>
-                    <Route path="/" exact component={Home} />
-                    <Route path="/create" component={Create} />
-                    <Route path="/details/:id" component={Details} />
+                    <Route path="/" exact component={HomePage} />
+                    <Route path="/create" component={CreatePage} />
+                    <Route path="/details/:id" component={DetailsPage} />
                 </div>
             </Router>
         )

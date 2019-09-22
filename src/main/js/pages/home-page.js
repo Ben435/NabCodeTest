@@ -1,9 +1,9 @@
 import React from 'react';
-import './home.scss'
+import './home-page.scss'
 import {withRouter} from "react-router-dom";
 import Search from '../components/search'
 
-class Home extends React.Component {
+class HomePage extends React.Component {
     constructor(props) {
         super(props);
 
@@ -54,4 +54,4 @@ class Home extends React.Component {
     }
 }
 
-export default withRouter(Home);
+export default withRouter(HomePage);

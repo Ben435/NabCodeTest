@@ -1,7 +1,7 @@
 import React from 'react';
 import EditableItemDetails from "../components/editable-item-details";
 
-export default class Create extends React.Component {
+export default class CreatePage extends React.Component {
     constructor(props) {
         super(props);
 

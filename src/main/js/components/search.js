@@ -1,5 +1,4 @@
 import React from "react";
-import {withRouter} from "react-router-dom";
 import './search.scss'
 
 class Search extends React.Component {
@@ -93,4 +92,4 @@ class Search extends React.Component {
     }
 }
 
-export default withRouter(Search);
+export default Search;

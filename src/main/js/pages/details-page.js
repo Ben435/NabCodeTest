@@ -1,9 +1,9 @@
 import React from 'react';
 import {withRouter} from "react-router-dom";
 import EditableItemDetails from "../components/editable-item-details";
-import './details.scss';
+import './details-page.scss';
 
-class Home extends React.Component {
+class DetailsPage extends React.Component {
     constructor(props) {
         super(props);
 
@@ -78,4 +78,4 @@ class Home extends React.Component {
     }
 }
 
-export default withRouter(Home);
+export default withRouter(DetailsPage);
