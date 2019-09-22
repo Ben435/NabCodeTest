@@ -42,7 +42,8 @@ class Search extends React.Component {
     }
 
     onKeyDown(key) {
-        if (key.keyCode === 13) {   // Enter key
+        // Enter key
+        if (key.keyCode === 13) {
             this.onSearch();
         }
     }
