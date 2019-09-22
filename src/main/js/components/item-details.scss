@@ -1,0 +1,25 @@
+.details {
+  display: flex;
+  flex-flow: column nowrap;
+
+  .actions {
+    display: flex;
+    flex-flow: row nowrap;
+
+    button {
+      flex: 1;
+    }
+  }
+
+  .fields {
+    flex: 1;
+    display: flex;
+    flex-flow: column nowrap;
+
+    * {
+      display: inline-flex;
+    }
+  }
+
+
+}
