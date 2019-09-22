@@ -44,12 +44,12 @@ class ItemDetails extends React.Component {
             })
         })
             .then(r => r.json())
-            .then(this.props.history.push('/?refresh=true'));
+            .then(this.props.history.push(''));
     }
 
     delete() {
         fetch(`/api/grocery/${this.state.currentItem.id}`, { method: 'DELETE' })
-            .then(this.props.history.push('/?refresh=true'));
+            .then(this.props.history.push(''));
     }
 
     render() {

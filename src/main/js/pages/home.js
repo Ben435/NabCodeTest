@@ -16,29 +16,6 @@ class Home extends React.Component {
         this.onUpdateItems = this.onUpdateItems.bind(this);
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        if (this.props.location !== prevProps.location) {
-            const searchParams = new URLSearchParams(this.props.location.search);
-            if (searchParams.get('refresh')) {
-                this.refresh();
-            }
-        }
-
-    }
-
-    componentDidMount() {
-        if (this.state.items === null) {
-            this.refresh();
-        }
-    }
-
-    refresh() {
-        this.setState({loading: true, items: null});
-        fetch('/api/grocery')
-            .then(r => r.json())
-            .then(r => this.setState({items: r, loading: false}))
-    }
-
     bootstrap() {
         fetch('/api/grocery/bootstrap')
             .then(this.refresh.bind(this));

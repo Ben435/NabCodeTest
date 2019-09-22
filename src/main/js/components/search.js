@@ -14,7 +14,12 @@ class Search extends React.Component {
 
         this.onSearchNameChange = this.onSearchNameChange.bind(this);
         this.onCategoryChange = this.onCategoryChange.bind(this);
+        this.onKeyDown = this.onKeyDown.bind(this);
         this.onSearch = this.onSearch.bind(this);
+    }
+
+    componentDidMount() {
+        this.onSearch();
     }
 
     onSearchNameChange(e) {
@@ -26,6 +31,12 @@ class Search extends React.Component {
         const newVal = e.target.value;
 
         this.setState({selectedCategory: newVal})
+    }
+
+    onKeyDown(key) {
+        if (key.keyCode === 13) {   // Enter key
+            this.onSearch();
+        }
     }
 
     onSearch() {
@@ -62,8 +73,8 @@ class Search extends React.Component {
         const {searchVal, categories, selectedCategory} = this.state;
         return (
             <div className="search">
-                <input onChange={this.onSearchNameChange} value={searchVal} placeholder={"Search by name"}/>
-                <select onChange={this.onCategoryChange} value={selectedCategory}>
+                <input onChange={this.onSearchNameChange} value={searchVal} placeholder={"Search by name"} onKeyDown={this.onKeyDown}/>
+                <select onChange={this.onCategoryChange} value={selectedCategory} onKeyDown={this.onKeyDown}>
                     <option value={""}>None</option>
                     {categories.map((category, index) => <option key={index} value={category}>{category[0].toUpperCase() + category.slice(1).toLowerCase()}</option>)}
                 </select>
