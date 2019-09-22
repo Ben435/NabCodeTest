@@ -1,0 +1,14 @@
+.create {
+  display: flex;
+  flex-flow: column nowrap;
+
+  .actions {
+    display: flex;
+    flex-flow: row nowrap;
+
+    button {
+      flex: 1 1;
+      margin: 0 4px;
+    }
+  }
+}

@@ -34,7 +34,10 @@ class Home extends React.Component {
         fetch(`/api/grocery/${id}`)
             .then(r => r.json())
             .then(r => this.setState({item: r, loading: false}))
-            .catch(e => this.setState({item: null, loading: false}))
+            .catch(e => {
+                console.error("Error retrieving item: ", e);
+                this.setState({item: null, loading: false})
+            })
     }
 
     save() {
@@ -43,9 +46,7 @@ class Home extends React.Component {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-                ...this.state.item
-            })
+            body: JSON.stringify(this.state.item)
         })
             .then(() => this.props.history.push(''));
     }
