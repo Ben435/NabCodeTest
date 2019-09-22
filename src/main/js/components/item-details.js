@@ -22,10 +22,10 @@ class ItemDetails extends React.Component {
 
     updateField(fieldName) {
         return (e) => {
-            const val = e.target.value;
+            const newVal = e.target.value;
             const newItem = {
                 ...this.state.currentItem,
-                [fieldName]: val
+                [fieldName]: newVal
             };
             this.setState({
                 currentItem: newItem
@@ -44,13 +44,12 @@ class ItemDetails extends React.Component {
             })
         })
             .then(r => r.json())
-            .then(r => this.setState({currentItem: r}));
+            .then(this.props.history.push('/?refresh=true'));
     }
 
     delete() {
-        fetch(`/api/grocery/${this.state.currentItem.id}`, {
-            method: 'DELETE'
-        }).then(this.props.history.push('/?refresh=true'));
+        fetch(`/api/grocery/${this.state.currentItem.id}`, { method: 'DELETE' })
+            .then(this.props.history.push('/?refresh=true'));
     }
 
     render() {

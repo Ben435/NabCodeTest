@@ -1,6 +1,7 @@
 import React from 'react';
 import './home.scss'
 import {withRouter} from "react-router-dom";
+import Search from '../components/search'
 
 class Home extends React.Component {
     constructor(props) {
@@ -12,6 +13,7 @@ class Home extends React.Component {
         };
 
         this.bootstrap = this.bootstrap.bind(this);
+        this.onUpdateItems = this.onUpdateItems.bind(this);
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -31,20 +33,23 @@ class Home extends React.Component {
     }
 
     refresh() {
+        this.setState({loading: true, items: null});
         fetch('/api/grocery')
             .then(r => r.json())
-            .then(r => {
-                console.log(r);
-                this.setState({items: r, loading: false})
-            })
+            .then(r => this.setState({items: r, loading: false}))
     }
 
     bootstrap() {
-        fetch('/api/grocery/bootstrap').then(() => console.log("Bootstrapped!"));
+        fetch('/api/grocery/bootstrap')
+            .then(this.refresh.bind(this));
     }
 
     navigateToItemCallback(item) {
         return () => this.props.history.push('/' + item.id);
+    }
+
+    onUpdateItems(newState) {
+        this.setState({loading: newState.loading, items: newState.items});
     }
 
     render() {
@@ -53,7 +58,8 @@ class Home extends React.Component {
         return (
             <div className="home">
                 <button onClick={this.bootstrap}>Bootstrap</button>
-                {/*<SearchBox />*/}
+                <Search itemsCallback={this.onUpdateItems} />
+                <hr/>
                 <div className="itemsContainer">
                     { loading && <p>Loading...</p>  }
                     { !loading && items.map(i => <div key={i.id} className="grid-item" onClick={this.navigateToItemCallback(i).bind(this)}>{i.name}</div>)}
