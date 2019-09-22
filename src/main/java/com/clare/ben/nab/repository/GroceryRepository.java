@@ -83,4 +83,8 @@ public class GroceryRepository {
                 .distinct()
                 .collect(Collectors.toList());
     }
+
+    void clearStore() {
+        this.store.clear();
+    }
 }

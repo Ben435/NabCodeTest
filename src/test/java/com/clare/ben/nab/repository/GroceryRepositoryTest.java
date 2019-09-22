@@ -10,8 +10,11 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RunWith(MockitoJUnitRunner.class)
 public class GroceryRepositoryTest {
@@ -175,6 +178,43 @@ public class GroceryRepositoryTest {
         Optional<Grocery> actual = repository.deleteGrocery(id.substring(id.length() / 2));
 
         Assert.assertTrue(actual.isEmpty());
+    }
+
+    @Test
+    public void getAllCategories_withOneCategoryInStore_returnsCategory() {
+        repository.clearStore();
+
+        String expected = "hello";
+        Grocery singleGrocery = Grocery.builder().name("test").category(expected).build();
+        repository.createGrocery(singleGrocery);
+
+        Collection<String> categories = repository.getAllCategories();
+
+        Assert.assertEquals(1, categories.size());
+        categories.forEach(actual -> Assert.assertEquals(expected, actual));
+    }
+
+    @Test
+    public void getAllCategories_withMultipleCategoriesInStore_returnsCategories() {
+        String expected = "other";
+        Grocery singleGrocery = Grocery.builder().name("test").category(expected).build();
+        repository.createGrocery(singleGrocery);
+
+        Collection<String> categories = repository.getAllCategories();
+
+        Assert.assertEquals(3, categories.size());
+        List<String> expecteds = new ArrayList<>();
+        expecteds.add("fruit");
+        expecteds.add("vegetable");
+        expecteds.add(expected);
+
+        expecteds.sort(String::compareTo);
+
+        List<String> actuals = categories.stream().sorted().collect(Collectors.toList());
+
+        for (int i=0; i<3; i++) {
+            Assert.assertEquals(expecteds.get(i), actuals.get(i));
+        }
     }
 
     private void populateStoreWithMocks() {
