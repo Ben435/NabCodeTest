@@ -135,17 +135,15 @@ public class GroceryRepositoryTest {
     }
 
     @Test
-    public void updateGrocery_withValidGrocery_returnsUpdatedItem() {
+    public void updateGrocery_withValidGrocery_returnsOldItem() {
         Grocery original = dummyGrocery;
-
-        repository.createGrocery(original);
-
-        Grocery expected = Grocery.builder().id(original.getId()).name("different_name").category("cheese").build();
+        Grocery createdOriginal = repository.createGrocery(original);
+        Grocery expected = Grocery.builder().id(createdOriginal.getId()).name("different_name").category("cheese").build();
 
         Grocery actual = repository.updateGrocery(expected);
 
         Assert.assertEquals(actual.getId(), original.getId());
-        Assert.assertThat(actual, new SamePropertyValuesAs<>(expected));
+        Assert.assertThat(actual, new SamePropertyValuesAs<>(createdOriginal));
     }
 
     @Test

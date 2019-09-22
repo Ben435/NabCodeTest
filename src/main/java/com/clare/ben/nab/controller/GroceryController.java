@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Collection;
 
 @RestController
@@ -29,12 +30,12 @@ public class GroceryController {
     }
 
     @PostMapping
-    public Grocery createGrocery(@RequestBody CreateGroceryRequest req) {
+    public Grocery createGrocery(@RequestBody @Valid CreateGroceryRequest req) {
         return service.createGrocery(req);
     }
 
     @PutMapping
-    public ResponseEntity<?> editGrocery(@RequestBody Grocery req) {
+    public ResponseEntity<?> editGrocery(@RequestBody @Valid Grocery req) {
         return service
                 .updateGrocery(req)
                 .map(g -> ResponseEntity.noContent().build())

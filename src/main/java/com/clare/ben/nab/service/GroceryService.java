@@ -8,7 +8,6 @@ import com.google.common.base.Preconditions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.validation.Valid;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -37,16 +36,18 @@ public class GroceryService {
         return groceryRepository.getGrocery(id);
     }
 
-    public Grocery createGrocery(@Valid CreateGroceryRequest grocery) {
+    public Grocery createGrocery(CreateGroceryRequest req) {
+        Preconditions.checkNotNull(req);
+
         return groceryRepository.createGrocery(Grocery
                 .builder()
-                .name(grocery.getName())
-                .category(grocery.getCategory())
+                .name(req.getName())
+                .category(req.getCategory())
                 .build()
         );
     }
 
-    public Optional<Grocery> updateGrocery(@Valid Grocery newGrocery) {
+    public Optional<Grocery> updateGrocery(Grocery newGrocery) {
         return groceryRepository
                 .getGrocery(newGrocery.getId())
                 .map(old -> newGrocery) // Not doing anything fancy, just "if exists, replace".

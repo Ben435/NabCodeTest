@@ -6,7 +6,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import org.springframework.stereotype.Repository;
 
-import javax.validation.Valid;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
@@ -48,7 +47,7 @@ public class GroceryRepository {
     public Grocery updateGrocery(Grocery grocery) {
         Preconditions.checkNotNull(grocery);
 
-        return writeGrocery(grocery);
+        return store.replace(grocery.getId(), grocery);
     }
 
     public Grocery createGrocery(Grocery grocery) {
@@ -58,19 +57,15 @@ public class GroceryRepository {
             grocery.setId(UUID.randomUUID().toString());
         }
 
-        return writeGrocery(grocery);
+        store.put(grocery.getId(), grocery);
+
+        return grocery;
     }
 
     public Optional<Grocery> deleteGrocery(String id) {
         Preconditions.checkNotNull(id);
 
         return Optional.ofNullable(store.remove(id));
-    }
-
-    private Grocery writeGrocery(@Valid Grocery grocery) {
-        store.put(grocery.getId(), grocery);
-
-        return grocery;
     }
 
     // This would probably be a separate entity in a traditional data store.
