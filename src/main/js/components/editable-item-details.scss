@@ -1,0 +1,11 @@
+.editable-item-details {
+  margin: 8px 0;
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-column-gap: 8px;
+
+  label {
+    display: inline-flex;
+    align-items: center;
+  }
+}
