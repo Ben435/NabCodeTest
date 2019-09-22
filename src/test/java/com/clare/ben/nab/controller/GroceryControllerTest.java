@@ -40,7 +40,7 @@ public class GroceryControllerTest {
     @Test
     public void searchGroceries_withValidParams_callsServiceAndReturnsSearchResults() throws Exception {
         Grocery expected = validDummyGrocery();
-        when(service.searchGroceries(any(), any(), any())).thenReturn(Collections.singletonList(expected));
+        when(service.searchGroceries(any(), any())).thenReturn(Collections.singletonList(expected));
 
         mvc.perform(get(API_PREFIX).param("name", "mat"))
                 .andExpect(res -> {
@@ -48,7 +48,7 @@ public class GroceryControllerTest {
 
                     assertThat(actual[0], new SamePropertyValuesAs<>(expected));
 
-                    verify(service).searchGroceries(eq("mat"), isNull(), isNull());
+                    verify(service).searchGroceries(eq("mat"), isNull());
                 });
     }
 
@@ -57,7 +57,7 @@ public class GroceryControllerTest {
         Grocery expected = validDummyGrocery();
         when(service.createGrocery(any())).thenReturn(expected);
 
-        CreateGroceryRequest req = CreateGroceryRequest.builder().name(expected.getName()).category(expected.getCategory()).tags(expected.getTags()).build();
+        CreateGroceryRequest req = CreateGroceryRequest.builder().name(expected.getName()).category(expected.getCategory()).build();
 
         mvc.perform(
                 post(API_PREFIX)

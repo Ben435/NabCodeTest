@@ -1,15 +1,11 @@
 package com.clare.ben.nab.controller.request;
 
-import com.clare.ben.nab.model.Tag;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import java.util.Collections;
-import java.util.Set;
 
 @Builder
 @AllArgsConstructor
@@ -20,8 +16,4 @@ public class CreateGroceryRequest {
     private String name;
     @NotBlank
     private String category;
-
-    @NotNull
-    @Builder.Default
-    private Set<Tag> tags = Collections.emptySet();
 }

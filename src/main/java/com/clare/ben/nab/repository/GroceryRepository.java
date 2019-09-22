@@ -1,14 +1,16 @@
 package com.clare.ben.nab.repository;
 
 import com.clare.ben.nab.model.Grocery;
-import com.clare.ben.nab.model.Tag;
 import com.clare.ben.nab.repository.query.SearchGroceries;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import org.springframework.stereotype.Repository;
 
 import javax.validation.Valid;
-import java.util.*;
+import java.util.Collection;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
@@ -34,11 +36,6 @@ public class GroceryRepository {
                 .stream()
                 .filter(grocery -> Objects.isNull(search.getPartialName()) || grocery.getName().toLowerCase().contains(search.getPartialName().toLowerCase()))
                 .filter(grocery -> Objects.isNull(search.getCategory()) || grocery.getCategory().equalsIgnoreCase(search.getCategory()))
-                .filter(grocery -> {
-                    List<String> currentItemTags = grocery.getTags().stream().map(Tag::getName).collect(Collectors.toList());
-                    List<String> searchTags = search.getTags().stream().map(Tag::getName).collect(Collectors.toList());
-                    return currentItemTags.containsAll(searchTags);
-                })
                 .collect(Collectors.toUnmodifiableList());
     }
 

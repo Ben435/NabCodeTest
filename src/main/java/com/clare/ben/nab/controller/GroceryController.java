@@ -24,10 +24,9 @@ public class GroceryController {
     @GetMapping
     public Collection<Grocery> searchGroceries(
             @RequestParam(value = "name", required = false) String name,
-            @RequestParam(value = "category", required = false) String category,
-            @RequestParam(value = "tag", required = false) Collection<String> tags
+            @RequestParam(value = "category", required = false) String category
     ) {
-        return service.searchGroceries(name, category, tags);
+        return service.searchGroceries(name, category);
     }
 
     @PostMapping

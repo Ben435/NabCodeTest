@@ -1,7 +1,6 @@
 package com.clare.ben.nab.repository;
 
 import com.clare.ben.nab.model.Grocery;
-import com.clare.ben.nab.model.Tag;
 import com.clare.ben.nab.repository.query.SearchGroceries;
 import org.hamcrest.beans.SamePropertyValuesAs;
 import org.junit.Assert;
@@ -12,7 +11,6 @@ import org.mockito.InjectMocks;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Optional;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -20,15 +18,13 @@ public class GroceryRepositoryTest {
     @InjectMocks
     GroceryRepository repository;
 
-    private Tag dummyTag;
     private Grocery dummyGrocery;
 
     @Before
     public void setup() {
         populateStoreWithMocks();
 
-        dummyTag = new Tag("tag");
-        dummyGrocery = new Grocery("hello world!", "french", Collections.singleton(dummyTag));
+        dummyGrocery = new Grocery("hello world!", "french");
         dummyGrocery.setId("123");
     }
 
@@ -82,30 +78,13 @@ public class GroceryRepositoryTest {
     }
 
     @Test
-    public void searchGroceries_withTags_returnsMatchingItems() {
-        Grocery g = dummyGrocery;
-        repository.createGrocery(g);
-
-        SearchGroceries query = SearchGroceries
-                .builder()
-                .tags(Collections.singletonList(new Tag(dummyTag.getName())))
-                .build();
-
-        Collection<Grocery> groceries = repository.searchGroceries(query);
-
-        Assert.assertEquals(1, groceries.size());
-        Assert.assertTrue(groceries.contains(g));
-    }
-
-    @Test
-    public void searchGroceries_withPartialNameAndCategoryAndTags_returnsMatchingItems() {
+    public void searchGroceries_withPartialNameAndCategory_returnsMatchingItems() {
         Grocery g = dummyGrocery;
         repository.createGrocery(g);
 
         SearchGroceries query = SearchGroceries
                 .builder()
                 .partialName("llo")
-                .tags(Collections.singletonList(new Tag(dummyTag.getName())))
                 .category("french")
                 .build();
 
@@ -116,14 +95,13 @@ public class GroceryRepositoryTest {
     }
 
     @Test
-    public void searchGroceries_withPartialNameAndCategoryAndTagsButNoMatchingItemInStore_returnsNoItems() {
+    public void searchGroceries_withPartialNameAndCategoryButNoMatchingItemInStore_returnsNoItems() {
         Grocery g = dummyGrocery;
         repository.createGrocery(g);
 
         SearchGroceries query = SearchGroceries
                 .builder()
                 .partialName("llo")
-                .tags(Collections.singletonList(new Tag("gat")))
                 .category("french")
                 .build();
 

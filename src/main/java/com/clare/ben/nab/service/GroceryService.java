@@ -2,7 +2,6 @@ package com.clare.ben.nab.service;
 
 import com.clare.ben.nab.controller.request.CreateGroceryRequest;
 import com.clare.ben.nab.model.Grocery;
-import com.clare.ben.nab.model.Tag;
 import com.clare.ben.nab.repository.GroceryRepository;
 import com.clare.ben.nab.repository.query.SearchGroceries;
 import com.google.common.base.Preconditions;
@@ -10,10 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class GroceryService {
@@ -24,18 +20,12 @@ public class GroceryService {
         this.groceryRepository = groceryRepository;
     }
 
-    public Collection<Grocery> searchGroceries(String name, String category, Collection<String> tags) {
-        if (Objects.isNull(tags)) {
-            tags = Collections.emptyList();
-        }
-
-        Collection<Tag> objectTags = tags.stream().map(Tag::new).collect(Collectors.toList());
+    public Collection<Grocery> searchGroceries(String name, String category) {
 
         SearchGroceries query = SearchGroceries
                 .builder()
                 .partialName(name)
                 .category(category)
-                .tags(objectTags)
                 .build();
 
         return groceryRepository.searchGroceries(query);
@@ -52,7 +42,6 @@ public class GroceryService {
                 .builder()
                 .name(grocery.getName())
                 .category(grocery.getCategory())
-                .tags(grocery.getTags())
                 .build()
         );
     }
