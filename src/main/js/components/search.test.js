@@ -41,7 +41,8 @@ describe("Search component", () => {
     });
 
     test("Search calls search with correct params", async done => {
-        const pattern = [
+        // Expecting this order of calls, with responses.
+        const order = [
             {
                 url: "/api/category",
                 data: []
@@ -55,17 +56,17 @@ describe("Search component", () => {
                 data: [],
                 callback: () => done()
             }
-        ].reverse();    // Reverse as I want to use `pop` to move through them, but `pop` starts at the back.
+        ].reverse();    // Reverse as I want to use `pop` to move through items, but `pop` starts at the back.
         global.fetch = jest.fn().mockImplementation(url => {
-            let cur = pattern.pop();
-            if (url === cur.url) {
-                if (cur.callback) {
-                    cur.callback();
-                }
-                return Promise.resolve({ json: () => Promise.resolve(cur.data)})
-            } else {
-                expect(url).toEqual(cur.url);
+            let cur = order.pop();
+
+            // Will fail if not equal.
+            expect(url).toEqual(cur.url);
+
+            if (cur.callback) {
+                cur.callback();
             }
+            return Promise.resolve({ json: () => Promise.resolve(cur.data)})
         });
 
         const { getByText, getByPlaceholderText } = render(<Search itemsCallback={() => {}} />, container);
