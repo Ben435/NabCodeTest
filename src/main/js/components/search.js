@@ -9,7 +9,8 @@ class Search extends React.Component {
         this.state = {
             searchVal: "",
             selectedCategory: "",
-            categories: ["hi"]
+            categories: [],
+            categoriesLoading: true
         };
 
         this.onSearchNameChange = this.onSearchNameChange.bind(this);
@@ -19,7 +20,15 @@ class Search extends React.Component {
     }
 
     componentDidMount() {
+        this.loadCategories();
         this.onSearch();
+    }
+
+    loadCategories() {
+        this.setState({categoriesLoading: true});
+        fetch("/api/category")
+            .then(r => r.json())
+            .then(r => this.setState({categories: r, categoriesLoading: false}));
     }
 
     onSearchNameChange(e) {
@@ -70,11 +79,11 @@ class Search extends React.Component {
     }
 
     render() {
-        const {searchVal, categories, selectedCategory} = this.state;
+        const {searchVal, categories, selectedCategory, categoriesLoading} = this.state;
         return (
             <div className="search">
                 <input onChange={this.onSearchNameChange} value={searchVal} placeholder={"Search by name"} onKeyDown={this.onKeyDown}/>
-                <select onChange={this.onCategoryChange} value={selectedCategory} onKeyDown={this.onKeyDown}>
+                <select disabled={categoriesLoading} onChange={this.onCategoryChange} value={selectedCategory} onKeyDown={this.onKeyDown}>
                     <option value={""}>None</option>
                     {categories.map((category, index) => <option key={index} value={category}>{category[0].toUpperCase() + category.slice(1).toLowerCase()}</option>)}
                 </select>
