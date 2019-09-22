@@ -14,6 +14,7 @@ class Home extends React.Component {
 
         this.bootstrap = this.bootstrap.bind(this);
         this.onUpdateItems = this.onUpdateItems.bind(this);
+        this.createNew = this.createNew.bind(this);
     }
 
     bootstrap() {
@@ -21,8 +22,12 @@ class Home extends React.Component {
             .then(this.refresh.bind(this));
     }
 
+    createNew() {
+        this.props.history.push('/create');
+    }
+
     navigateToItemCallback(item) {
-        return () => this.props.history.push('/' + item.id);
+        return () => this.props.history.push('/details/' + item.id);
     }
 
     onUpdateItems(newState) {
@@ -34,7 +39,10 @@ class Home extends React.Component {
 
         return (
             <div className="home">
-                <button onClick={this.bootstrap}>Bootstrap</button>
+                <div className="actions">
+                    <button onClick={this.bootstrap}>Bootstrap</button>
+                    <button onClick={this.createNew}>Create New Grocery</button>
+                </div>
                 <Search itemsCallback={this.onUpdateItems} />
                 <hr/>
                 <div className="itemsContainer">

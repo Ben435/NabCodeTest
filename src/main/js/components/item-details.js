@@ -35,7 +35,7 @@ class ItemDetails extends React.Component {
 
     save() {
         fetch(`/api/grocery`, {
-            method: 'POST',
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -43,13 +43,12 @@ class ItemDetails extends React.Component {
                 ...this.state.currentItem
             })
         })
-            .then(r => r.json())
-            .then(this.props.history.push(''));
+            .then(() => this.props.history.push(''));
     }
 
     delete() {
         fetch(`/api/grocery/${this.state.currentItem.id}`, { method: 'DELETE' })
-            .then(this.props.history.push(''));
+            .then(() => this.props.history.push(''));
     }
 
     render() {
