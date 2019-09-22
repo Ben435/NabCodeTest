@@ -58,7 +58,7 @@ public class GroceryController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/bootstrap")
+    @PutMapping("/bootstrap")
     public void bootstrapGroceries() {
         for (int i=0; i<100; i++) {
             if (i % 2 == 0) {

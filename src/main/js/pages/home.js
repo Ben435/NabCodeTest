@@ -17,7 +17,7 @@ class Home extends React.Component {
     }
 
     bootstrap() {
-        fetch('/api/grocery/bootstrap')
+        fetch('/api/grocery/bootstrap', {method: 'PUT'})
             .then(this.refresh.bind(this));
     }
 
