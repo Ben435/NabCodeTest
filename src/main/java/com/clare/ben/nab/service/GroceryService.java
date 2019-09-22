@@ -22,7 +22,6 @@ public class GroceryService {
     }
 
     public Collection<Grocery> searchGroceries(String name, String category) {
-
         SearchGroceries query = SearchGroceries
                 .builder()
                 .partialName(name)
