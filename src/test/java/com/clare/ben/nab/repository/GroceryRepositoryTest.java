@@ -102,7 +102,7 @@ public class GroceryRepositoryTest {
         SearchGroceries query = SearchGroceries
                 .builder()
                 .partialName("llo")
-                .category("french")
+                .category("unknown_category")
                 .build();
 
         Collection<Grocery> groceries = repository.searchGroceries(query);

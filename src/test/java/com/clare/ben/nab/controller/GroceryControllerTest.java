@@ -206,6 +206,19 @@ public class GroceryControllerTest {
                 });
     }
 
+    @Test
+    public void bootstrapGroceries_whenCalled_createsSomeDemoGroceries() throws Exception {
+        when(service.createGrocery(any())).thenReturn(Grocery.builder().build());
+
+        mvc.perform(
+                put(API_PREFIX + "/bootstrap"))
+                .andExpect(res -> {
+                    assertEquals(200, res.getResponse().getStatus());
+
+                    verify(service, times(100)).createGrocery(any());
+                });
+    }
+
     private Grocery validDummyGrocery() {
         Grocery g = new Grocery("tomato", "vegetable");
         g.setId("1234");
