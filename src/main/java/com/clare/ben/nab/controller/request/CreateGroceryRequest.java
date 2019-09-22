@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.Collections;
 import java.util.Set;
 
 @Builder
@@ -21,5 +22,6 @@ public class CreateGroceryRequest {
     private String category;
 
     @NotNull
-    private Set<Tag> tags;
+    @Builder.Default
+    private Set<Tag> tags = Collections.emptySet();
 }

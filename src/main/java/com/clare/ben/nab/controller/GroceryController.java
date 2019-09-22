@@ -57,4 +57,27 @@ public class GroceryController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+
+    @GetMapping("/bootstrap")
+    public void bootstrapGroceries() {
+        for (int i=0; i<100; i++) {
+            if (i % 2 == 0) {
+                service.createGrocery(CreateGroceryRequest
+                        .builder()
+                        .name("fruit_" + i)
+                        .category("fruit")
+                        .build()
+                );
+            } else {
+                service.createGrocery(CreateGroceryRequest
+                        .builder()
+                        .name("vegetable_" + i)
+                        .category("vegetable")
+                        .build()
+                );
+            }
+
+        }
+
+    }
 }

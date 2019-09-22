@@ -12,6 +12,7 @@ module.exports = merge(common, {
         contentBase: [path.join(__dirname, 'src', 'main', 'resources', 'static')],
         compress: true,
         port: 9000,
+        historyApiFallback: true,
         proxy: {
             '/api': 'http://localhost:8080'
         }
