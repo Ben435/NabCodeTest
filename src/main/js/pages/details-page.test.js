@@ -1,7 +1,9 @@
-import {render} from "@testing-library/react";
+import {cleanup, render} from "@testing-library/react";
 import React from "react";
-import Details from "./details-page";
+import DetailsPage from "./details-page";
 import {MemoryRouter, Route} from "react-router-dom";
+
+afterEach(cleanup);
 
 test('does render', () => {
     window.fetch = jest.fn(url => {
@@ -20,7 +22,7 @@ test('does render', () => {
 
     const {baseElement} = render(
         <MemoryRouter initialEntries={[{ pathname: "/details/1234"}]}>
-            <Route exact path="/details/:id" component={Details} />
+            <Route exact path="/details/:id" component={DetailsPage} />
         </MemoryRouter>
     );
 
@@ -29,6 +31,4 @@ test('does render', () => {
     expect(buttons.length).toBe(2);
 
     buttons[0].click();
-
-    console.log(buttons)
 });

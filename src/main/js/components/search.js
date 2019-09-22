@@ -59,8 +59,7 @@ class Search extends React.Component {
             }];
 
             const queryParams = params
-                .filter(p => !!p.value)
-                .filter(p => !!p.value.trim())
+                .filter(p => !!p.value && !!p.value.trim())
                 .map(p => `${p.name}=${p.value.trim()}`)
                 .reduce((prev, cur) => (prev ? prev + "&" : "?") + cur, "");
 

@@ -18,8 +18,7 @@ class HomePage extends React.Component {
     }
 
     bootstrap() {
-        fetch('/api/grocery/bootstrap', {method: 'PUT'})
-            .then(this.refresh.bind(this));
+        fetch('/api/grocery/bootstrap', {method: 'PUT'});
     }
 
     createNew() {
