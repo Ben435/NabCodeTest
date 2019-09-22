@@ -72,4 +72,15 @@ public class GroceryRepository {
 
         return grocery;
     }
+
+    // This would probably be a separate entity in a traditional data store.
+    // However, as its all in memory, just put it here.
+    public Collection<String> getAllCategories() {
+        return store
+                .values()
+                .stream()
+                .map(Grocery::getCategory)
+                .distinct()
+                .collect(Collectors.toList());
+    }
 }
