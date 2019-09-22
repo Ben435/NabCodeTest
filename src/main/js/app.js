@@ -13,7 +13,7 @@ export default class App extends React.Component {
         return (
             <Router>
                 <div className="app">
-                    <h1>Hello world!</h1>
+                    <h1>NAB Code Test</h1>
                     <Route path="/" exact component={Home} />
                     <Route path="/:id" component={Details} />
                 </div>

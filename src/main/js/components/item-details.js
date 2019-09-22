@@ -50,7 +50,7 @@ class ItemDetails extends React.Component {
     delete() {
         fetch(`/api/grocery/${this.state.currentItem.id}`, {
             method: 'DELETE'
-        }).then(this.props.history.push('/'));
+        }).then(this.props.history.push('/?refresh=true'));
     }
 
     render() {
@@ -63,15 +63,11 @@ class ItemDetails extends React.Component {
                     <button onClick={this.delete}>Delete</button>
                 </div>
                 <div className="fields">
-                    <div>
-                        <label htmlFor='name'>Name:</label><input id='name' onChange={this.updateField('name').bind(this)}
-                                                                  value={name}/>
-                    </div>
-                    <div>
-                        <label htmlFor='category'>Category:</label><input id='category'
-                                                                          onChange={this.updateField('category').bind(this)}
-                                                                          value={category}/>
-                    </div>
+                    <label htmlFor='name'><span>Name:</span></label><input id='name' onChange={this.updateField('name').bind(this)}
+                                                              value={name}/>
+                    <label htmlFor='category'>Category:</label><input id='category'
+                                                                      onChange={this.updateField('category').bind(this)}
+                                                                      value={category}/>
                 </div>
             </div>
         )

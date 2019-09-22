@@ -8,16 +8,19 @@
 
     button {
       flex: 1;
+      margin: 0 4px;
     }
   }
 
   .fields {
-    flex: 1;
-    display: flex;
-    flex-flow: column nowrap;
+    margin: 8px 0;
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-column-gap: 8px;
 
-    * {
+    label {
       display: inline-flex;
+      align-items: center;
     }
   }
 
