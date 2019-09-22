@@ -53,6 +53,12 @@ task buildFrontend(type: NpmTask) {
     args = ['run', 'build']
 }
 
-buildFrontend.dependsOn(npmInstall)
+task testFrontend(type: NpmTask) {
+    args = ['run', 'test']
+}
 
+buildFrontend.dependsOn(npmInstall)
+testFrontend.dependsOn(npmInstall)
 processResources.dependsOn(buildFrontend)
+test.dependsOn(testFrontend)
+
