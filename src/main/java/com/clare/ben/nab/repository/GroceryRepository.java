@@ -7,6 +7,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import org.springframework.stereotype.Repository;
 
+import javax.validation.Valid;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -45,21 +46,31 @@ public class GroceryRepository {
         return Optional.ofNullable(store.get(id));
     }
 
-    public Grocery putGrocery(Grocery grocery) {
+    public Grocery updateGrocery(Grocery grocery) {
+        Preconditions.checkNotNull(grocery);
+
+        return writeGrocery(grocery);
+    }
+
+    public Grocery createGrocery(Grocery grocery) {
         Preconditions.checkNotNull(grocery);
 
         if (Strings.isNullOrEmpty(grocery.getId())) {
             grocery.setId(UUID.randomUUID().toString());
         }
 
-        store.put(grocery.getId(), grocery);
-
-        return grocery;
+        return writeGrocery(grocery);
     }
 
     public Optional<Grocery> deleteGrocery(String id) {
         Preconditions.checkNotNull(id);
 
         return Optional.ofNullable(store.remove(id));
+    }
+
+    private Grocery writeGrocery(@Valid Grocery grocery) {
+        store.put(grocery.getId(), grocery);
+
+        return grocery;
     }
 }

@@ -3,6 +3,7 @@ package com.clare.ben.nab.repository;
 import com.clare.ben.nab.model.Grocery;
 import com.clare.ben.nab.model.Tag;
 import com.clare.ben.nab.repository.query.SearchGroceries;
+import org.hamcrest.beans.SamePropertyValuesAs;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -51,7 +52,7 @@ public class GroceryRepositoryTest {
     @Test
     public void searchGroceries_withPartialName_returnsMatchingItems() {
         Grocery g = dummyGrocery;
-        repository.putGrocery(g);
+        repository.createGrocery(g);
 
         SearchGroceries query = SearchGroceries
                 .builder()
@@ -67,7 +68,7 @@ public class GroceryRepositoryTest {
     @Test
     public void searchGroceries_withCategory_returnsMatchingItems() {
         Grocery g = dummyGrocery;
-        repository.putGrocery(g);
+        repository.createGrocery(g);
 
         SearchGroceries query = SearchGroceries
                 .builder()
@@ -83,7 +84,7 @@ public class GroceryRepositoryTest {
     @Test
     public void searchGroceries_withTags_returnsMatchingItems() {
         Grocery g = dummyGrocery;
-        repository.putGrocery(g);
+        repository.createGrocery(g);
 
         SearchGroceries query = SearchGroceries
                 .builder()
@@ -99,7 +100,7 @@ public class GroceryRepositoryTest {
     @Test
     public void searchGroceries_withPartialNameAndCategoryAndTags_returnsMatchingItems() {
         Grocery g = dummyGrocery;
-        repository.putGrocery(g);
+        repository.createGrocery(g);
 
         SearchGroceries query = SearchGroceries
                 .builder()
@@ -117,7 +118,7 @@ public class GroceryRepositoryTest {
     @Test
     public void searchGroceries_withPartialNameAndCategoryAndTagsButNoMatchingItemInStore_returnsNoItems() {
         Grocery g = dummyGrocery;
-        repository.putGrocery(g);
+        repository.createGrocery(g);
 
         SearchGroceries query = SearchGroceries
                 .builder()
@@ -134,7 +135,7 @@ public class GroceryRepositoryTest {
     @Test
     public void getGrocery_forExistingGrocery_returnsGrocery() {
         Grocery expected = dummyGrocery;
-        String id = repository.putGrocery(expected).getId();
+        String id = repository.createGrocery(expected).getId();
 
         Optional<Grocery> actual = repository.getGrocery(id);
 
@@ -145,7 +146,7 @@ public class GroceryRepositoryTest {
     @Test
     public void getGrocery_forNonExistingId_returnsEmpty() {
         Grocery expected = dummyGrocery;
-        String id = repository.putGrocery(expected).getId();
+        String id = repository.createGrocery(expected).getId();
 
         Optional<Grocery> actual = repository.getGrocery(id.substring(id.length() / 2));
 
@@ -153,20 +154,34 @@ public class GroceryRepositoryTest {
     }
 
     @Test
-    public void putGrocery_withNoId_generatesIdAndPutsInStore() {
+    public void updateGrocery_withValidGrocery_returnsUpdatedItem() {
+        Grocery original = dummyGrocery;
+
+        repository.createGrocery(original);
+
+        Grocery expected = Grocery.builder().id(original.getId()).name("different_name").category("cheese").build();
+
+        Grocery actual = repository.updateGrocery(expected);
+
+        Assert.assertEquals(actual.getId(), original.getId());
+        Assert.assertThat(actual, new SamePropertyValuesAs<>(expected));
+    }
+
+    @Test
+    public void createGrocery_withNoId_generatesIdAndPutsInStore() {
         Grocery expected = dummyGrocery;
-        String id = repository.putGrocery(expected).getId();
+        expected.setId(null);
 
-        Optional<Grocery> actual = repository.getGrocery(id);
+        Grocery actual = repository.createGrocery(expected);
 
-        Assert.assertTrue(actual.isPresent());
-        Assert.assertEquals(expected, actual.get());
+        Assert.assertEquals(expected, actual);
+        Assert.assertNotNull(actual.getId());
     }
 
     @Test
     public void deleteGrocery_withExistingId_removesItemAndReturnsRemoved() {
         Grocery expected = dummyGrocery;
-        String id = repository.putGrocery(expected).getId();
+        String id = repository.createGrocery(expected).getId();
 
         Optional<Grocery> actual = repository.deleteGrocery(id);
 
@@ -177,7 +192,7 @@ public class GroceryRepositoryTest {
     @Test
     public void deleteGrocery_withNonExistingId_returnsEmpty() {
         Grocery expected = dummyGrocery;
-        String id = repository.putGrocery(expected).getId();
+        String id = repository.createGrocery(expected).getId();
 
         Optional<Grocery> actual = repository.deleteGrocery(id.substring(id.length() / 2));
 
@@ -188,7 +203,7 @@ public class GroceryRepositoryTest {
         String key;
         for (int i = 0; i < 10; i++) {
             key = String.valueOf(i);
-            this.repository.putGrocery(new Grocery("tomato_" + key, i % 2 == 0 ? "fruit" : "vegetable"));
+            this.repository.createGrocery(new Grocery("tomato_" + key, i % 2 == 0 ? "fruit" : "vegetable"));
         }
     }
 }

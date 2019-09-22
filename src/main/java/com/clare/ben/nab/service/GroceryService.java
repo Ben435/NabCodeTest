@@ -48,7 +48,7 @@ public class GroceryService {
     }
 
     public Grocery createGrocery(CreateGroceryRequest grocery) {
-        return groceryRepository.putGrocery(Grocery
+        return groceryRepository.createGrocery(Grocery
                 .builder()
                 .name(grocery.getName())
                 .category(grocery.getCategory())
@@ -61,7 +61,7 @@ public class GroceryService {
         return groceryRepository
                 .getGrocery(newGrocery.getId())
                 .map(old -> newGrocery) // Not doing anything fancy, just "if exists, replace".
-                .map(groceryRepository::putGrocery);
+                .map(groceryRepository::updateGrocery);
     }
 
     public Optional<Grocery> deleteGrocery(String id) {
