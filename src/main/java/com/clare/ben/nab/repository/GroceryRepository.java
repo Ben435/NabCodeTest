@@ -9,6 +9,8 @@ import org.springframework.stereotype.Repository;
 
 import javax.validation.Valid;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
 
 /**
@@ -18,10 +20,10 @@ import java.util.stream.Collectors;
 @Repository
 public class GroceryRepository {
 
-    private Map<String, Grocery> store;
+    private ConcurrentMap<String, Grocery> store;
 
     public GroceryRepository() {
-        store = new HashMap<>();
+        store = new ConcurrentHashMap<>();
     }
 
     public Collection<Grocery> searchGroceries(SearchGroceries search) {
